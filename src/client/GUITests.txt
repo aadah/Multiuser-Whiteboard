@@ -1,0 +1,75 @@
+
+GRAPHICAL USER INTERFACE - MANUAL TESTS
+---------------------------------------------------------------
+The GUI for our application is multi-windowed, with a total of
+8 windows. We chose this in our design because it allowed the
+user to interact with only the part of the application that he
+or she needed. This scheme also allowed us to prevent invalid
+user input by simply not showing a certain window rather than
+keeping logs of what the user has done.
+
+The design is to have the complete program's JComponents exist
+as fields in one class, and delegate the JComponents to their
+correct windows. The purpose of such composition is so that the
+JComponents can be referenced in the listener class that
+contains them. This way, I was able to pull information from
+one JComponent to use in another, regardless of whether they
+occupied the same window,
+
+The tests to ensure the correctness of the GUI were carried out
+in two ways: individually in modular testing and collectively
+when testing out the cohesiveness of the overall application.
+In the case of testing the whole application, the tests were
+more gradual. Since the GUI was finished before the server and
+canvas model were fully implemented, testing for the correct
+interactions between the individual windows began as mostly
+checking if events in one window caused another window to
+change. When all pieces of the application were implemented,
+testing the GUI involved not only checking for cross-window
+interaction, but also consistency in how windows opened and
+closed.
+
+I. INDIVIDUAl TESTING
+Each GUI window had two constructors: one for layout and one
+for interaction. The layout constructor simply existed to
+properly arrange the JComponents in a window. Most GUI windows
+had JComponents that when activated, are supposed to interact
+with a different GUI window. Given this, JComponents did not do
+do anything in individual executions since there was no shared
+listener. This allowed for debugging layout to be very easy since
+changing the layout of one JComponent did not have the risk of
+changing the layout of another JComponent in another GUI window
+because of the modularity (the alternative would be a single
+GroupLayout with an absurd number of JComponents that would
+eventually become troublesome to keep track of).
+
+II. INTERACTION TESTING
+To test for appropriate interaction between JComponents, I
+created the aptly named MasterGUI (which is also misleading
+because it is not a JFrame, but a listener). I would add the
+ubiquitous listener to all the JComponents that would cause a
+change in the final application. However, in these early tests,
+I simply had an action event change the labels of, say, a
+JButton in a different window. Such tests were quick, but
+confirmed that cross listener event handling was not only
+possible, but very easy to do and the best route in creating the
+GUI.
+
+III. APPLICATION TESTING
+Once the other pieces of the application were substantially
+completed, more meaningful tests could be carried out. The big
+things to make sure were correct included:
+
+	- Application started with IPv4 window, and after entering,
+	would never be reachable again.
+	- Username and new board windows would update JLabel messages
+	in cases like unavailable username, illegal size, etc.
+	- Whiteboard JButton windows would (re)open their correct
+	windows. If already open, bring to front.
+	- Windows did not position off-screen in confusing ways.
+	- Windows that disabled windows while they were active, like
+	new username/board, closing with the X button should re-enable.
+	- Window titles for the social and board windows would update
+	when a user changes their name or board  to reflect the change.
+	
+All of the above have passed testing, and other tests have also.

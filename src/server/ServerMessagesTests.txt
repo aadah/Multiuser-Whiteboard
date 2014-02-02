@@ -1,0 +1,66 @@
+This document contains a comprehensive list of tests
+performed on the server (Server.java). These tests
+were all done through the ServerTestGUI, which is
+a GUI that allows us to send text commands (that
+satisfy the line protocol) to the server. The server
+sends the client certain messages, and those
+messages are shown to the tester. This is how 
+we tested the validity of the various messages.
+For multi-client tests, we simply connected
+additional ServerTestGUI instances to the server.
+
+This suite of message-passing tests is sufficient
+because they inherently test all of server's
+inner methods (because interaction with the
+client depends on their success), and interaction
+with the client is what drives the whiteboard
+to perform up to spec. However, there is another
+test file that tests a few of the server's
+smaller, more basic methods. (See
+ServerMethodTests.java.)
+
+Note that sending messages that do not conform to
+the line protocol OR that do not meet the preconditions
+of the Server methods (e.g. that a certain user
+or board must exist) is not a part of the spec
+so these were not vigorously tested.
+
+A client initially logs on. Client receives a:
+ - Given client receives NEWBOARD sequence
+ - Given client does not receive any CHAT messages
+ - Given client receive ALLBOARDS message
+ - All users receive ALLUSERS message
+ - Clients on the new client's board (this must,
+   of course, include the connecting client)
+   receive a new USERSONBOARD (users-on-board)
+   message
+User change visible username:
+ - Updated users list
+   - For all users
+ - Updated users-on-board list
+   - For users on that board, but
+     NOT for users on other boards
+User changes boards:
+ - New users-on-board messages for all clients on
+   both the from-board (the board the client switched
+   from) and the to-board (the board the client
+   switched to)
+User creates a new board:
+ - Updated ALLBOARDS message for all clients
+ - Appropriate user-change-board messages from
+   server (becuase creating new board automatically
+   moves caller client to the new board). See
+   above.
+User sends a DRAW message:
+ - The DRAW message is sent to all clients on the
+   caller client's board
+User sends a CHAT message:
+ - The CHAT message is sent to all clients on the
+   caller client's board
+A client disconnects:
+ - All other clients that are still online receive
+   a new ALLUSERS message
+ - All other clients that are on the board that the
+   disconnecting-client was on (until he disconnected)
+   receive a new users-on-board message
+
